@@ -4,6 +4,8 @@ cimport opus
 
 from _utils cimport int_or_ptr, int_or_str
 
+cdef void _raise_for_error(int err, str extra=?) except *
+
 cdef class _OpusAudio:
     cdef readonly int SAMPLING_RATE
     cdef readonly int CHANNELS
@@ -19,7 +21,6 @@ cdef class Encoder(_OpusAudio):
     cdef array.array _output_template
 
     cdef int _create_state(self) except *
-    cdef void _raise_for_error(self, int err, str extra=?) except *
     cdef int _ctl(self, int option, int_or_ptr value) except *
     cpdef int set_bitrate(self, int kbps) except *
     cpdef int set_bandwidth(self, bandsidth) except *

@@ -56,6 +56,12 @@ class OpusNotLoaded(ExceptionBase):
     """An exception that is thrown for when libopus is not loaded."""
     pass
 
+
+cdef inline void _raise_for_error(int err, str extra='') except *:
+    if err < 0:
+        raise OpusError(err, extra)
+
+
 cdef class _OpusAudio:
     def __cinit__(self):
         self.SAMPLING_RATE = 48000
@@ -88,17 +94,13 @@ cdef class Encoder(_OpusAudio):
             if self.application not in _app_ctl:
                 extra = " ({} is not a valid application type, try one of: {})".format(
                     self.application, ', '.join(map(str, _app_ctl))) # TODO: nice text or something
-            self._raise_for_error(err, extra)
+            _raise_for_error(err, extra)
 
         return err
 
-    cdef void _raise_for_error(self, int err, str extra='') except *:
-        if err < 0:
-            raise OpusError(err, extra)
-
     cdef int _ctl(self, int option, int_or_ptr value) except *:
         ret = opus.encoder_ctl(self.state, option, value)
-        self._raise_for_error(ret)
+        _raise_for_error(ret)
 
         if int_or_ptr is int:
             return ret
@@ -142,7 +144,7 @@ cdef class Encoder(_OpusAudio):
         cdef array.array data = array.clone(self._output_template, max_size//4, zero=False)
 
         ret = self._encode(_pcm.data.as_shorts, frame_size, data.data.as_uchars, max_size)
-        self._raise_for_error(ret)
+        _raise_for_error(ret)
 
         array.resize(data, ret)
         return data.tobytes()
