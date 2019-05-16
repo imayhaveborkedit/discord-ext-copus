@@ -79,7 +79,7 @@ cdef class Encoder(_OpusAudio):
         if self.state is not NULL:
             opus.encoder_destroy(self.state)
 
-    cdef int _create_state(self) except -1:
+    cdef int _create_state(self) except *:
         cdef int err = 0
         self.state = opus.encoder_create(self.SAMPLING_RATE, self.CHANNELS, self.application, &err)
 
@@ -88,12 +88,18 @@ cdef class Encoder(_OpusAudio):
             if self.application not in _app_ctl:
                 extra = " ({} is not a valid application type, try one of: {})".format(
                     self.application, ', '.join(map(str, _app_ctl))) # TODO: nice text or something
-            raise OpusError(err, extra)
+            self._raise_for_error(err, extra)
 
         return err
 
+    cdef void _raise_for_error(self, int err, str extra='') except *:
+        if err < 0:
+            raise OpusError(err, extra)
+
     cdef int _ctl(self, int option, int_or_ptr value) except *:
         ret = opus.encoder_ctl(self.state, option, value)
+        self._raise_for_error(ret)
+
         if int_or_ptr is int:
             return ret
         elif int_or_ptr is cython.p_int:
@@ -136,8 +142,9 @@ cdef class Encoder(_OpusAudio):
         cdef array.array data = array.clone(self._output_template, max_size//4, zero=False)
 
         ret = self._encode(_pcm.data.as_shorts, frame_size, data.data.as_uchars, max_size)
-        array.resize(data, ret)
+        self._raise_for_error(ret)
 
+        array.resize(data, ret)
         return data.tobytes()
 
     cdef int _encode(self, short *pcm, int frame_size, unsigned char *data, int max_size) nogil:

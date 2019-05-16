@@ -18,7 +18,8 @@ cdef class Encoder(_OpusAudio):
     cdef opus.OpusEncoder *state
     cdef array.array _output_template
 
-    cdef int _create_state(self) except -1
+    cdef int _create_state(self) except *
+    cdef void _raise_for_error(self, int err, str extra=?) except *
     cdef int _ctl(self, int option, int_or_ptr value) except *
     cpdef int set_bitrate(self, int kbps) except *
     cpdef int set_bandwidth(self, bandsidth) except *
