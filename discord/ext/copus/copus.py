@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 
-__all__ = ['install']
+__all__ = ['install', 'libopus_loader', 'load_opus', 'is_loaded']
 
 log = logging.getLogger(__name__)
 
@@ -55,10 +55,16 @@ def is_loaded():
 # New functions
 
 def __install_to_module(module):
-    module.__old__module__self__ = module
+    _nothing = object()
     module._copus = _clib
+    module._copus_monkeypatched = True
+
     for attr in _clib.__all__:
-        setattr(module, attr, getattr(_clib, attr))
+        old = getattr(module, attr, _nothing)
+        new = getattr(_clib, attr)
+        if old is not _nothing:
+            setattr(module, '__copus__old__'+attr, old)
+        setattr(module, attr, new)
 
 def install(module=None):
     """Monkeypatches the given module (defaults to discord) to use the extension objects.
