@@ -9,7 +9,7 @@ Run `setup.py build_ext -i` to build the extension.  I will add the install code
 from discord.ext import copus
 copus.install()
 ```
-This monkeypatches the extension objects into discord.py, replacing the pure python ones.
+This monkeypatches the extension objects into discord.py, replacing the pure python ones.  To revert this simply call `copus.uninstall()`.
 
 ## Requirements
 - Python 3.6 or 3.7, might work on 3.5 too
