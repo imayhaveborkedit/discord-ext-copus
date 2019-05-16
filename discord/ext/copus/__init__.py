@@ -1,1 +1,1 @@
-from .copus import install
+from .copus import *

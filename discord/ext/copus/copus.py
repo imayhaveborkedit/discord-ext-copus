@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 
-__all__ = []
+__all__ = ['install']
 
 log = logging.getLogger(__name__)
 
