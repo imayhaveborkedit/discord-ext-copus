@@ -1,6 +1,7 @@
 import os
-import sys
 import shutil
+import struct
+import sys
 
 from os.path import normpath as norm
 
@@ -12,7 +13,7 @@ os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'discord', 'ex
 
 # System info
 platform = sys.platform
-arch = '64' if sys.maxsize > 2**32 else '32'
+arch = struct.calcsize('P') * 8
 
 # Defaults
 bindir = norm(os.path.join(os.path.abspath('.'), 'bin', f'x{arch}'))
@@ -36,7 +37,7 @@ if platform == 'win32':
     include_dirs.append(norm('D:/MinGW/include'))
     library_dirs.append(norm('D:/MinGW/lib'))
 
-    if arch == '64':
+    if arch == 64:
         extra_compile_args.append('-DMS_WIN64')
 
 setup(

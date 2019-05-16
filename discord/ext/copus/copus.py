@@ -1,4 +1,5 @@
 import os
+import struct
 import sys
 import logging
 
@@ -8,7 +9,7 @@ log = logging.getLogger(__name__)
 
 # Fix PATH on windows
 if sys.platform == 'win32':
-    _arch = '64' if sys.maxsize > 2**32 else '32'
+    _arch = struct.calcsize('P') * 8
     _basepath = os.path.dirname(__file__)
     _binpath = os.path.abspath(os.path.normpath(os.path.join(_basepath, 'bin', f'x{_arch}')))
     log.info("Adding %r to os.environ['PATH']", _binpath)
