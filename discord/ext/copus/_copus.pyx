@@ -29,10 +29,13 @@ _app_ctl = [
 ]
 
 discord = sys.modules.get('discord')
-if discord:
-    ExceptionBase = discord.DiscordException
-else:
-    ExceptionBase = Exception
+ExceptionBase = Exception
+
+try:
+    if isinstance(discord.DiscordException, Exception):
+        ExceptionBase = discord.DiscordException
+except:
+    pass
 
 class OpusError(ExceptionBase):
     """An exception that is thrown for libopus related errors.
