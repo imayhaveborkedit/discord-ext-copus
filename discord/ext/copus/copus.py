@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 
-__all__ = ['install', 'libopus_loader', 'load_opus', 'is_loaded']
+__all__ = ['install', 'uninstall', 'libopus_loader', 'load_opus', 'is_loaded']
 
 log = logging.getLogger(__name__)
 
@@ -54,6 +54,20 @@ def is_loaded():
 
 # New functions
 
+def install(module=None):
+    """Monkeypatches the given module (defaults to discord) to use the extension objects.
+    Basically it's just a setattr loop for this module's __all__.
+    """
+
+    if module is None:
+        discord = sys.modules.get('discord')
+        if discord:
+            module = discord.opus
+        else:
+            raise TypeError("Could not find discord and no module parameter provided")
+
+    __install_to_module(module)
+
 def __install_to_module(module):
     _nothing = object()
     module._copus = _clib
@@ -66,17 +80,32 @@ def __install_to_module(module):
             setattr(module, '__copus__old__'+attr, old)
         setattr(module, attr, new)
 
-def install(module=None):
-    """Monkeypatches the given module (defaults to discord) to use the extension objects.
-    Basically it's just a setattr loop for this module's __all__.
-    """
+def uninstall(module=None):
+    """Attempts to undo previous monkeypatching."""
 
     if module is None:
         discord = sys.modules.get('discord')
         if discord:
             module = discord.opus
+        else:
+            raise TypeError("Could not find discord and no module parameter provided")
 
-    __install_to_module(module)
+    if not getattr(module, '_copus_monkeypatched', False):
+        raise RuntimeError("Module {} has not been installed to.".format(module))
+
+    __uninstall_from_module(module)
+
+def __uninstall_from_module(module):
+    _nothing = object()
+    del module._copus
+    del module._copus_monkeypatched
+
+    for attr in _clib.__all__:
+        orig = getattr(module, '__copus__old__'+attr, _nothing)
+
+        if orig is not _nothing:
+            setattr(module, attr, orig)
+            delattr(module, '__copus__old__'+attr)
 
 try:
     load_opus()
