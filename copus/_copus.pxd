@@ -1,8 +1,9 @@
 from cpython cimport array
 
-cimport opus
+cimport copus.opus as opus
 
-from _utils cimport int_or_ptr, int_or_str
+from copus._utils cimport int_or_ptr, int_or_str
+
 
 cdef void _raise_for_error(int err, str extra=?) except *
 

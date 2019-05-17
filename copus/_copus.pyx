@@ -3,9 +3,9 @@ import cython
 
 from cpython cimport array
 
-cimport opus
+cimport copus.opus as opus
 
-from _utils cimport int_or_ptr, int_or_str
+from copus._utils cimport int_or_ptr, int_or_str
 
 __all__ = ['Encoder', 'Decoder', 'OpusError', 'OpusNotLoaded']
 
