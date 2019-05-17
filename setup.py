@@ -34,7 +34,8 @@ extra_compile_args = ['-O2', '-march=native']
 extra_link_args = ['-O2', '-march=native']
 
 compiler_directives = {
-    'language_level': 3
+    'language_level': 3,
+    'embedsignature': True
 }
 libraries = {
     'win32': ['opus'],
