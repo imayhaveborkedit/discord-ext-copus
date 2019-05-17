@@ -66,17 +66,16 @@ setup(
     project_urls={
         'Code': 'https://github.com/imayhaveborkedit/discord-ext-copus',
         'Issue tracker': 'https://github.com/imayhaveborkedit/discord-ext-copus/issues'
-
     },
 
     version='0.0.1',
-    python_requires='>=3.6.0',
+    python_requires='>=3.6.4',
     setup_requires=['Cython==0.27.3'],
     zip_safe=False,
 
     packages=['discord.ext.copus'],
     package_dir={'discord.ext.copus': 'copus'},
-    provides=['discord.ext.copus'],
+    # provides=['discord.ext.copus'],
 
     ext_modules = cythonize([
         Extension(
