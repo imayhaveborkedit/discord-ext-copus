@@ -12,5 +12,8 @@ copus.install()
 This monkeypatches the extension objects into discord.py, replacing the pure-python+ffi ones.  To revert this simply call `copus.uninstall()`.
 
 ## Requirements
-- Python 3.6 or 3.7
+- Python 3.6.4+
 - discord.py
+
+Compiling from source requires:
+- cython 0.27.3

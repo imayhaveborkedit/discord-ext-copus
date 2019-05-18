@@ -68,7 +68,7 @@ setup(
         'Issue tracker': 'https://github.com/imayhaveborkedit/discord-ext-copus/issues'
     },
 
-    version='0.0.1',
+    version='0.1.0',
     python_requires='>=3.6.4',
     setup_requires=['Cython==0.27.3'],
     zip_safe=False,
