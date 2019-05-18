@@ -30,8 +30,8 @@ def normalize(path_list, relative_to=None):
 include_dirs = [cwd, extension_path]
 library_dirs = [binary_path]
 runtime_lib_dirs = [binary_path]
-extra_compile_args = ['-O2', '-march=native']
-extra_link_args = ['-O2', '-march=native']
+extra_compile_args = ['-O2']
+extra_link_args = ['-O2']
 
 compiler_directives = {
     'language_level': 3,
