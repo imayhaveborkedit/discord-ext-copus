@@ -3,9 +3,6 @@
 # discord-ext-copus
 Cython bindings of libopus for discord.py
 
-## Installation
-`pip install discord-ext-copus`
-
 ## Usage
 ```py
 from discord.ext import copus
